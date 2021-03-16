@@ -116,15 +116,22 @@ void CitireIndivizi(int n, int a[])
 
 int main()
 {
-    Individ I(0,'0');
-    static int a[31];
-    int n;
+    
+    Individ a[31](0,'0');
+    
+    int n,i;
+    
     CitireIndivizi(n,a);
-    I.actualizare();
-    if(I.esteviu()==1)
-        cout<<"\n"<<"Individul urmator este viu.";
-    else
-        cout<<"\n"<<"Individul urmator nu este viu.";
-    cout<<"\n"<<"Tipul individului este: "<<I.gettip()
-;    return 0;
+    
+    for(i=0;i<n;i++)
+    {
+        a[i].actualizare();
+        if(a[i].esteviu()==1)
+            cout<<"\n"<<"Individul urmator este viu.";
+        else
+            cout<<"\n"<<"Individul urmator nu este viu.";
+        cout<<"\n"<<"Tipul individului este: "<<a[i].gettip();
+    }
+
+    return 0;
 }
