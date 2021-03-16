@@ -106,16 +106,25 @@ int Individ::gettip()
     return tip;
 }
 
+void CitireIndivizi(int n, int a[])
+{
+    int i;
+    cin>>n;
+    for(i=0;i<n;i++)
+        cin>>a[i];
+}
+
 int main()
 {
-    static int a[31];
-
-    while(1==1)
-    {
     Individ I(0,'0');
-    cin>>I;
-    cout<<I;
-    }
-
-    return 0;
+    static int a[31];
+    int n;
+    CitireIndivizi(n,a);
+    I.actualizare();
+    if(I.esteviu()==1)
+        cout<<"\n"<<"Individul urmator este viu.";
+    else
+        cout<<"\n"<<"Individul urmator nu este viu.";
+    cout<<"\n"<<"Tipul individului este: "<<I.gettip()
+;    return 0;
 }
