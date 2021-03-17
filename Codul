@@ -18,28 +18,25 @@ class Individ
 
 public:
 
-    Individ (int i, char tip);
+    Constructor (int i, char tip);
 
     void actualizare();
     int esteviu();
     int gettip();
 
+    void citire();
+
     friend ostream& operator <<(ostream& out, const Individ& I);
-    friend istream& operator >>(istream& in, Individ& I);
 
 };
 
-Individ::Individ(int i, char tip)
+Individ::Constructor(int i, char tip)
 {
-    int energie;
     this-> i= i;
     this-> tip= tip;
     this-> varsta= 0;
-    cout<<"\nEnergia: ";
-    cin>>energie;
-    this-> energie= energie;
+    this-> energie= 4;
     this-> viu= '1';
-
 }
 
 ostream& operator <<(ostream& out, const Individ& I)
@@ -52,13 +49,18 @@ ostream& operator <<(ostream& out, const Individ& I)
     return out;
 }
 
-istream& operator >>(istream& in, Individ& I)
+void Individ::citire()
 {
     cout<<"\nPozitia: ";
-    in>> I.i;
-    cout<<"\nTipul: ";
-    in>> I.tip;
-    return in;
+    cin>> this->i;
+    cout<<"\nVarsta: ";
+    cin>>this->varsta;
+    cout<<"\nTip('+' sau '0'): ";
+    cin>>this->tip;
+    cout<<"\nEnergie: ";
+    cin>>this->energie;
+    cout<<"\nViu(este 1 daca e viu si 0 daca e mort): ";
+    cin>>this->viu;
 }
 
 void Individ::hraneste()
@@ -78,12 +80,18 @@ void Individ::ataca()
 
 void Individ::imbatraneste()
 {
-
+    const int valoare=2;
+    cout<<"\nEnergia va scadea cu valoarea 2";
+    this->varsta++;
+    this->energie -= valoare;
+    if(this->varsta>50 || this->energie<=0)
+        moare();
 }
 
 void Individ::moare()
 {
-
+    this-> viu= '0';
+    cout<<"\nIndividul a murit de boala grea :(";
 }
 
 void Individ::actualizare()
@@ -106,31 +114,48 @@ int Individ::gettip()
     return tip;
 }
 
-void CitireIndivizi(int n, int a[])
+void CitireIndivizi(int& n, Individ a[])
 {
     int i;
+    cout<<"Numarul de indivizi ales: ";
     cin>>n;
     for(i=0;i<n;i++)
-        cin>>a[i];
+    {
+        a[i].citire();
+    }
 }
 
 int main()
 {
-    
-    Individ a[31](0,'0');
-    
-    int n,i;
-    
+    static Individ a[30];
+
+    int n, i, task;
+
     CitireIndivizi(n,a);
-    
+
     for(i=0;i<n;i++)
     {
-        a[i].actualizare();
-        if(a[i].esteviu()==1)
-            cout<<"\n"<<"Individul urmator este viu.";
-        else
-            cout<<"\n"<<"Individul urmator nu este viu.";
-        cout<<"\n"<<"Tipul individului este: "<<a[i].gettip();
+        cout<<"\nCe vrei sa faci cu individul numarul "<<i+1<<"?";
+        cout<<"\nPress 1 for update ";
+        cout<<"\nPress 2 for status ";
+        cout<<"\nPress 3 for type ";
+        cin>>task;
+        if(task==1)
+        {
+
+            a[i].actualizare();
+        }
+
+        else if(task==2)
+                {
+                    if(a[i].esteviu()==1)
+                        cout<<"\n"<<"Individul urmator este viu.";
+                    else
+                        cout<<"\n"<<"Individul urmator nu este viu.";
+                }
+        else if(task==3)
+            cout<<"\n"<<"Tipul individului este "<<(char)a[i].gettip();
+         cout<<a[i];
     }
 
     return 0;
