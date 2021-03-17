@@ -26,8 +26,6 @@ public:
 
     void citire();
 
-    friend ostream& operator <<(ostream& out, const Individ& I);
-
 };
 
 Individ::Constructor(int i, char tip)
@@ -37,16 +35,6 @@ Individ::Constructor(int i, char tip)
     this-> varsta= 0;
     this-> energie= 4;
     this-> viu= '1';
-}
-
-ostream& operator <<(ostream& out, const Individ& I)
-{
-    out<<"\nPozitia: "<< I.i;
-    out<<"\nVarsta: "<< I.varsta;
-    out<<"\nTip: "<< I.tip;
-    out<<"\nEnergie: "<< I.energie;
-    out<<"\nViu: "<< I.viu<<"\n";
-    return out;
 }
 
 void Individ::citire()
@@ -80,12 +68,18 @@ void Individ::ataca()
 
 void Individ::imbatraneste()
 {
-    const int valoare=2;
-    cout<<"\nEnergia va scadea cu valoarea 2";
-    this->varsta++;
-    this->energie -= valoare;
-    if(this->varsta>50 || this->energie<=0)
-        moare();
+    if(this->viu=='1')
+    {
+        const int valoare=2;
+        cout<<"\nVarsta va creste cu valoarea 1";
+        this->varsta++;
+        cout<<"\nEnergia va scadea cu valoarea 2";
+        this->energie -= valoare;
+        if(this->varsta>50 || this->energie<=0)
+            moare();
+    }
+    else
+        cout<<"\nIndividul era mort deja :(";
 }
 
 void Individ::moare()
@@ -141,11 +135,7 @@ int main()
         cout<<"\nPress 3 for type ";
         cin>>task;
         if(task==1)
-        {
-
             a[i].actualizare();
-        }
-
         else if(task==2)
                 {
                     if(a[i].esteviu()==1)
@@ -155,7 +145,6 @@ int main()
                 }
         else if(task==3)
             cout<<"\n"<<"Tipul individului este "<<(char)a[i].gettip();
-         cout<<a[i];
     }
 
     return 0;
