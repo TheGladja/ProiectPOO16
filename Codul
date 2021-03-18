@@ -11,8 +11,8 @@ class Individ
     unsigned char viu;
 
     void hraneste();
-    void inmulteste();
-    void ataca();
+    void inmulteste(Individ& x, Individ& y);
+    void ataca(Individ& x, Individ& y);
     void imbatraneste();
     void moare();
 
@@ -20,7 +20,7 @@ public:
 
     Constructor (int i, char tip);
 
-    void actualizare();
+    void actualizare(Individ& x, Individ& y);
     int esteviu();
     int gettip();
 
@@ -41,7 +41,7 @@ void Individ::citire()
 {
     cout<<"\nPozitia: ";
     cin>> this->i;
-    cout<<"\nVarsta: ";
+    cout<<"\nVarsta(nu poate fi mai mare de 50 de ani): ";
     cin>>this->varsta;
     cout<<"\nTip('+' sau '0'): ";
     cin>>this->tip;
@@ -56,24 +56,46 @@ void Individ::hraneste()
     this-> energie += rand()%10+1;
 }
 
-void Individ::inmulteste()
+void Individ::inmulteste(Individ& x, Individ& y)
 {
-
+    if(x.viu=='0')
+    {
+        x.viu = '1';
+        x.tip = this-> tip;
+        x.energie = this-> energie * 2;
+        x.varsta = 0;
+    }
+    if(y.viu=='0')
+    {
+        y.viu = '1';
+        y.tip = this-> tip;
+        y.energie = this-> energie * 2;
+        y.varsta = 0;
+    }
 }
 
-void Individ::ataca()
+void Individ::ataca(Individ& x, Individ& y)
 {
-
+    if(x.tip != this-> tip && this-> energie > x.energie)
+    {
+        this-> energie -= x.energie;
+        x.moare();
+    }
+    if(y.tip != this-> tip && this-> energie > y.energie)
+    {
+        this-> energie -= y.energie;
+        y.moare();
+    }
 }
 
 void Individ::imbatraneste()
 {
     if(this->viu=='1')
     {
-        const int valoare=2;
+        const int valoare=4;
         cout<<"\nVarsta va creste cu valoarea 1";
         this->varsta++;
-        cout<<"\nEnergia va scadea cu valoarea 2";
+        cout<<"\nEnergia va scadea cu valoarea 4";
         this->energie -= valoare;
         if(this->varsta>50 || this->energie<=0)
             moare();
@@ -85,14 +107,14 @@ void Individ::imbatraneste()
 void Individ::moare()
 {
     this-> viu= '0';
-    cout<<"\nIndividul a murit de boala grea :(";
+    cout<<"\nIndividul de pe pozitia "<< this-> i <<" a murit de boala grea :(";
 }
 
-void Individ::actualizare()
+void Individ::actualizare(Individ& x, Individ& y)
 {
     hraneste();
-    inmulteste();
-    ataca();
+    inmulteste(x,y);
+    ataca(x,y);
     imbatraneste();
 }
 
@@ -129,22 +151,40 @@ int main()
 
     for(i=0;i<n;i++)
     {
-        cout<<"\nCe vrei sa faci cu individul numarul "<<i+1<<"?";
-        cout<<"\nPress 1 for update ";
-        cout<<"\nPress 2 for status ";
-        cout<<"\nPress 3 for type ";
-        cin>>task;
-        if(task==1)
-            a[i].actualizare();
-        else if(task==2)
+        cout<<"\n\nCe vrei sa faci cu individul numarul "<<i+1<<"?";
+        if(i>0 && i<n-1)
+        {
+            cout<<"\nPress 1 for update ";
+            cout<<"\nPress 2 for status ";
+            cout<<"\nPress 3 for type ";
+            cin>>task;
+            if(task==1)
+                a[i].actualizare(a[i-1],a[i+1]);
+            else if(task==2)
                 {
                     if(a[i].esteviu()==1)
-                        cout<<"\n"<<"Individul urmator este viu.";
-                    else
-                        cout<<"\n"<<"Individul urmator nu este viu.";
+                        cout<<"\nIndividul urmator este viu.";
+                    else if(a[i].esteviu()==0)
+                        cout<<"\nAcest individ nu este viu.";
                 }
-        else if(task==3)
-            cout<<"\n"<<"Tipul individului este "<<(char)a[i].gettip();
+            else if(task==3)
+                cout<<"\nTipul individului este "<<(char)a[i].gettip();
+        }
+        else
+        {
+            cout<<"\nPress 2 for status ";
+            cout<<"\nPress 3 for type ";
+            cin>>task;
+            if(task==2)
+                {
+                    if(a[i].esteviu()==1)
+                        cout<<"\nIndividul urmator este viu.";
+                    else if(a[i].esteviu()==0)
+                        cout<<"\nAcest individ nu este viu.";
+                }
+            else if(task==3)
+                cout<<"\nTipul individului este "<<(char)a[i].gettip();
+        }
     }
 
     return 0;
